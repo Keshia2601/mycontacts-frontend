@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await axios.get("/users/current", {
+        const res = await axios.get("api/users/current", {
           headers: { Authorization: `Bearer ${token}` },
         })
         setUser(res.data)
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const login = async (email, password) => {
-    const res = await api.post("api/users/login", { email, password })
+    const res = await api.post("/users/login", { email, password })
     localStorage.setItem("token", res.data.accessToken)
 
     const userRes = await api.get("/users/current")
