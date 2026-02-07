@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { useNotification } from "../context/NotificationContext";
+import "./Login.css"
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const {showSuccess, showError} = useNotification()
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -18,10 +21,17 @@ const Login = () => {
 
     try {
       await login(email, password);
+      showSuccess("Login success")
       navigate("/contacts", {replace : true})
     } catch (err) {
       console.log(err)
-      setError(err.message || "Login failed");
+      if(err?.response?.status == 500){
+        showError(err?.response?.statusText)
+        setError(err?.response?.data?.message || "Login failed");
+      }
+      else{
+        showError("Login failed")
+      }
     } finally {
       setLoading(false);
     }
@@ -37,6 +47,7 @@ const Login = () => {
           value={email}
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
           required
         />
         <input
@@ -44,10 +55,11 @@ const Login = () => {
           value={password}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
           required
         />
         <button type="submit" disabled={loading}>
-          {loading ? "Loggin in..." : "Login"}
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 

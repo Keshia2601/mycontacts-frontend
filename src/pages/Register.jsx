@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
+import './Register.css'
 
 const Register = () => {
   const navigate = useNavigate();
@@ -37,18 +38,24 @@ const Register = () => {
           type="text"
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
+          disabled={loading}
+          required
         />
         <input
           value={email}
           type="email"
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
+          disabled={loading}
+          required
         />
         <input
           value={password}
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          disabled={loading}
+          required
         />
         <button type="submit" disabled={loading}>
           {loading ? "Creating..." : "Register"}

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getContacts, deleteContact } from "../services/contactService"
-
+import { useNotification } from "../context/NotificationContext";
 const Contacts = () => {
   const navigate = useNavigate();
 
   const [contacts, setContacts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { showSuccess, showError } = useNotification();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -30,8 +30,9 @@ const Contacts = () => {
     try {
       await deleteContact(id);
       setContacts((prev) => prev.filter((c) => c._id !== id));
+      showSuccess("Contact deleted");
     } catch {
-      alert("Failed to delete contact");
+      showError("Failed to delete contact");
     }
   };
 
