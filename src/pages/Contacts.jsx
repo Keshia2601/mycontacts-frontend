@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getContacts, deleteContact } from "../services/contactService";
 import { useNotification } from "../context/NotificationContext";
+import "./Contacts.css";
+import { useAuth } from "../auth/AuthContext";
 const Contacts = () => {
   const navigate = useNavigate();
 
+  const {logout} = useAuth();
   const [contacts, setContacts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { showSuccess, showError } = useNotification();
+  const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -27,25 +32,31 @@ const Contacts = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this contact?")) return;
+    setDeletingId(true);
     try {
       await deleteContact(id);
       setContacts((prev) => prev.filter((c) => c._id !== id));
       showSuccess("Contact deleted");
     } catch {
       showError("Failed to delete contact");
+    } finally {
+      setDeletingId(false);
     }
   };
 
-  if (loading) return <div>Loading Contacts...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="state-text">Loading Contacts...</div>;
+  if (error) return <div className="state-text error">{error}</div>;
 
   return (
-    <>
-      <h2>Contacts</h2>
-      {contacts.length === 0 ? (
-        <div>No contacts found</div>
+    <div className="contacts-container">
+      <div className="contacts-header">
+        <h2>Contacts</h2>
+        <button onClick={() => navigate("/contacts/new")} disabled={loading}>New Contact</button>
+      </div>
+      {contacts.length === 0 && !loading ? (
+        <div className="empty-contacts">No contacts found. Create one</div>
       ) : (
-        <table border="1" cellPadding="5">
+        <table className="contacts-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -54,24 +65,35 @@ const Contacts = () => {
               <th>Actions</th>
             </tr>
           </thead>
+
           <tbody>
-            {contacts?.map((c) => (
+            {contacts.map((c) => (
               <tr key={c._id}>
                 <td>{c.name}</td>
                 <td>{c.email}</td>
                 <td>{c.phone}</td>
-                <td>
+                <td className="actions">
                   <button onClick={() => navigate(`/contacts/${c._id}/edit`)}>
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(c._id)}>Delete</button>
+                  <button
+                    className="delete"
+                    disabled={deletingId === c._id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(c._id);
+                    }}
+                  >
+                    {deletingId === c._id ? "Deleting..." : "Delete"}
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-    </>
+      <button onClick={ logout}>Logout</button>
+    </div>
   );
 };
 

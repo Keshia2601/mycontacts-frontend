@@ -10,14 +10,21 @@ export const AuthProvider = ({ children }) => {
 
   // run once on app load
   useEffect(() => {
+    const tokenFromStorage = localStorage.getItem("token")
+
+    if(!tokenFromStorage){
+      setLoading(false)
+      return
+    }
+    api.defaults.headers.common.Authorization = `Bearer ${tokenFromStorage}`;
+
     const loadUser = async () => {
       try {
-        const res = await axios.get("api/users/current", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const res = await api.get("/users/current")
         setUser(res.data)
         setIsAuthenticated(true)
       } catch (err) {
+        localStorage.removeItem("token")
         setUser(null)
         setIsAuthenticated(false)
       } finally {
@@ -39,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token")
-    setToken(null)
+    delete api.defaults.headers.common.Authorization;
     setUser(null)
     setIsAuthenticated(false)
   }

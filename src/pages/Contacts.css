@@ -1,0 +1,70 @@
+.empty-contacts {
+  text-align: center;
+  margin-top: 40px;
+  color: #777;
+}
+
+.contacts-container {
+  padding: 20px;
+}
+
+.contacts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.contacts-header button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contacts-table th,
+.contacts-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.contacts-table th {
+  background: #3f3e3e;
+  text-align: center;
+}
+
+.contacts-table tr:hover {
+  background: #fafafa31;
+}
+
+.actions button {
+  margin-right: 8px;
+}
+
+button.delete {
+  color: #fff;
+  background: #d9534f;
+  border: none;
+  padding: 6px 10px;
+}
+
+button.delete:hover {
+  background: #c9302c;
+}
+
+.state-text {
+  margin-top: 20px;
+}
+
+.state-text.error {
+  color: red;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

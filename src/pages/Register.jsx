@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
-import './Register.css'
+import "./Auth.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,11 +17,13 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await api.post('/users/register', {
-        username, email, password
+      await api.post("/users/register", {
+        username,
+        email,
+        password,
       });
-      navigate("/", {replace : true})
-    } catch(err) {
+      navigate("/", { replace: true });
+    } catch (err) {
       setError("Registration failed");
     } finally {
       setLoading(false);
@@ -29,10 +31,10 @@ const Register = () => {
   };
 
   return (
-    <>
-      <h2>Register</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="auth-page">
+      <form className="auth-card" onSubmit={handleSubmit}>
+        <h2>Register</h2>
+        {error && <p className="auth-error">{error}</p>}
         <input
           value={username}
           type="text"
@@ -57,14 +59,14 @@ const Register = () => {
           disabled={loading}
           required
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="auth-button">
           {loading ? "Creating..." : "Register"}
         </button>
+        <div className="auth-switch">
+          Already registered? <Link to="/">Login</Link>
+        </div>
       </form>
-      <div>
-        Already registered? <Link to="/">Login</Link>
-      </div>
-    </>
+    </div>
   );
 };
 
