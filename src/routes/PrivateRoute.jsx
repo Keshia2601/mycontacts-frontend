@@ -5,11 +5,11 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Checking authentication...</div>
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace />
   }
 
   return children
