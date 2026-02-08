@@ -1,44 +1,72 @@
-.empty-contacts {
-  text-align: center;
-  margin-top: 40px;
-  color: #777;
-}
-
 .contacts-container {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(16px, 3vw, 28px);
 }
 
 .contacts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.contacts-header h2 {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 28px);
+  color: var(--color-primary);
 }
 
 .contacts-header button {
-  padding: 8px 12px;
-  cursor: pointer;
+  padding: 10px 16px;
+}
+
+.empty-contacts {
+  text-align: center;
+  padding: 28px 16px;
+  color: #8a4a6a;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
 }
 
 .contacts-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(241, 178, 207, 0.7);
+  box-shadow: var(--shadow-sm);
 }
 
 .contacts-table th,
 .contacts-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  padding: 12px 14px;
   text-align: left;
+  border-bottom: 1px solid rgba(241, 178, 207, 0.6);
+  font-size: 14px;
 }
 
 .contacts-table th {
-  background: #3f3e3e;
-  text-align: center;
+  background: #f8d6e7;
+  color: #5b1332;
+  font-weight: 600;
+  text-align: left;
 }
 
-.contacts-table tr:hover {
-  background: #fafafa31;
+.contacts-table tbody tr {
+  transition: background-color var(--transition);
+}
+
+.contacts-table tbody tr:nth-child(even) {
+  background: #fff7fb;
+}
+
+.contacts-table tbody tr:hover {
+  background: #ffe7f1;
 }
 
 .actions button {
@@ -49,7 +77,8 @@ button.delete {
   color: #fff;
   background: #d9534f;
   border: none;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  box-shadow: none;
 }
 
 button.delete:hover {
@@ -58,13 +87,31 @@ button.delete:hover {
 
 .state-text {
   margin-top: 20px;
+  color: #8a4a6a;
 }
 
 .state-text.error {
-  color: red;
+  color: #b00020;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.contacts-container > button {
+  align-self: flex-start;
+  padding: 10px 16px;
+}
+
+@media (max-width: 720px) {
+  .contacts-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contacts-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .contacts-table th,
+  .contacts-table td {
+    white-space: nowrap;
+  }
 }

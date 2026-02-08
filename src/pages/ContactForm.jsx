@@ -11,11 +11,34 @@ const ContactForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = Boolean(id);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const [loading, setLoading] = useState(false);
   const { showSuccess, showError } = useNotification();
+
+  useEffect(() => {
+    if (!isEdit) return;
+
+    const fetchContact = async () => {
+      setLoading(true);
+      try {
+        const res = await getContactById(id);
+        setForm({
+          name: res.data.name || "",
+          email: res.data.email || "",
+          phone: res.data.phone || "",
+        });
+      } catch {
+        showError("Failed to load contact");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchContact();
+  }, [id, isEdit]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,18 +46,22 @@ const ContactForm = () => {
 
     try {
       if (isEdit) {
-        await api.put(`/contacts/${id}`, { name, email, phone });
+        await updateContact(id, form);
+        showSuccess("Contact updated");
       } else {
         await createContact(form);
         showSuccess("Contact created");
       }
-
       navigate("/contacts", { replace: true });
-    } catch (err) {
+    } catch {
       showError("Failed to save contact");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (
